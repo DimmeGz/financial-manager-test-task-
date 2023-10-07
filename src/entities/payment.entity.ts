@@ -10,7 +10,7 @@ import {
 import { Category } from './category.entity';
 import { User } from './user.entity';
 import { ApiProperty } from '@nestjs/swagger';
-import { PaymentType } from 'src/enums';
+import { PaymentType } from '../enums';
 
 @Entity({ name: 'payments' })
 export class Payment {

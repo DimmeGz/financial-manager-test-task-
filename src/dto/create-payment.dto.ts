@@ -24,5 +24,5 @@ export class CreatePaymentDto {
   @IsOptional()
   @IsInt()
   @Min(1)
-  categoryId?: number;
+  category?: number;
 }

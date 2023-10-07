@@ -1,5 +1,5 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { Category, User } from 'src/entities';
+import { Category, Payment, User } from 'src/entities';
 
 export const DB_CONFIG: TypeOrmModuleOptions = {
   type: 'mysql',
@@ -8,5 +8,5 @@ export const DB_CONFIG: TypeOrmModuleOptions = {
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  entities: [Category, User],
+  entities: [Category, Payment, User],
 };

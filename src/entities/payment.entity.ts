@@ -21,14 +21,14 @@ export class Payment {
   @Column()
   amount: number;
 
-  @Column()
+  @Column({ nullable: true })
   description: string;
 
   @ManyToOne(() => Category, (category) => category.payments, {
     onDelete: 'SET NULL',
   })
   @JoinColumn({ name: 'categoryId' })
-  category: Category;
+  category: number;
 
   @ManyToOne(() => User, (user) => user.payments, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId' })

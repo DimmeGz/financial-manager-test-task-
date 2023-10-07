@@ -9,9 +9,10 @@ import {
   UseGuards,
   Req,
   ParseIntPipe,
+  Query,
 } from '@nestjs/common';
 import { PaymentsService } from './payments.service';
-import { CreatePaymentDto, UpdatePaymentDto } from '../dto';
+import { CreatePaymentDto, PaymentsFilterDTO, UpdatePaymentDto } from '../dto';
 import { JwtGuard } from 'src/guards';
 import { UserRequest } from 'src/interfaces';
 
@@ -29,8 +30,11 @@ export class PaymentsController {
   }
 
   @Get()
-  findAll(@Req() request: UserRequest) {
-    return this.paymentsService.findAll(request.user.id);
+  findAll(
+    @Req() request: UserRequest,
+    @Query() searchQuery?: PaymentsFilterDTO,
+  ) {
+    return this.paymentsService.findAll(request.user.id, searchQuery);
   }
 
   @Get(':id')

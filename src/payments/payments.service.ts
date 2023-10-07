@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreatePaymentDto, UpdatePaymentDto } from '../dto';
+import { CreatePaymentDto, PaymentsFilterDTO, UpdatePaymentDto } from '../dto';
 import { Payment, User } from 'src/entities';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -38,11 +38,30 @@ export class PaymentsService {
     }
   }
 
-  async findAll(userId: number) {
+  async findAll(userId: number, searchQuery?: PaymentsFilterDTO) {
     try {
-      const payments = await this.paymentsRepository.find({
-        where: { user: { id: userId } },
-      });
+      const qb = this.paymentsRepository
+        .createQueryBuilder('payment')
+        .where('payment.user.id = :userId', { userId });
+
+      if (searchQuery.start_date) {
+        qb.andWhere('payment.created_at >= :startDate', {
+          startDate: searchQuery.start_date,
+        });
+      }
+
+      if (searchQuery.end_date) {
+        qb.andWhere('payment.created_at <= :endDate', {
+          endDate: searchQuery.end_date,
+        });
+      }
+
+      if (searchQuery.description) {
+        qb.andWhere('payment.description LIKE :description', {
+          description: `%${searchQuery.description}%`,
+        });
+      }
+      const payments = await qb.getMany();
 
       return payments;
     } catch (e) {

@@ -8,11 +8,15 @@ import {
   ParseIntPipe,
   UseGuards,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+
 import { CategoriesService } from './categories.service';
+
 import { CreateCategoryDto } from '../dto';
 import { JwtGuard } from '../guards';
 
 @Controller('categories')
+@ApiTags('Categories')
 @UseGuards(JwtGuard)
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}

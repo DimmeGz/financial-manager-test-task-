@@ -11,12 +11,16 @@ import {
   ParseIntPipe,
   Query,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+
 import { PaymentsService } from './payments.service';
+
 import { CreatePaymentDto, PaymentsFilterDTO, UpdatePaymentDto } from '../dto';
 import { JwtGuard } from 'src/guards';
 import { UserRequest } from 'src/interfaces';
 
 @Controller('payments')
+@ApiTags('Payments')
 @UseGuards(JwtGuard)
 export class PaymentsController {
   constructor(private readonly paymentsService: PaymentsService) {}

@@ -10,6 +10,7 @@ import { AuthModule } from './auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 import { CategoriesModule } from './categories/categories.module';
 import { PaymentsModule } from './payments/payments.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { PaymentsModule } from './payments/payments.module';
     AuthModule,
     CategoriesModule,
     PaymentsModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

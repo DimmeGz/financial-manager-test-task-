@@ -11,21 +11,38 @@ import {
   ParseIntPipe,
   Query,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import {
+  ApiCreatedResponse,
+  ApiHeader,
+  ApiResponse,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 
 import { PaymentsService } from './payments.service';
 
 import { CreatePaymentDto, PaymentsFilterDTO, UpdatePaymentDto } from '../dto';
 import { JwtGuard } from 'src/guards';
 import { UserRequest } from 'src/interfaces';
+import { Payment } from 'src/entities';
 
 @Controller('payments')
 @ApiTags('Payments')
+@ApiHeader({
+  name: 'Authorization',
+  description: 'Bearer token',
+  required: true,
+})
+@ApiUnauthorizedResponse({ description: 'Unauthorized' })
 @UseGuards(JwtGuard)
 export class PaymentsController {
   constructor(private readonly paymentsService: PaymentsService) {}
 
   @Post()
+  @ApiCreatedResponse({
+    description: 'The record has been successfully created.',
+    type: Payment,
+  })
   create(
     @Body() createPaymentDto: CreatePaymentDto,
     @Req() request: UserRequest,
@@ -34,6 +51,12 @@ export class PaymentsController {
   }
 
   @Get()
+  @ApiResponse({
+    description: 'The record has been successfully created.',
+    type: Payment,
+    isArray: true,
+    status: 200,
+  })
   findAll(
     @Req() request: UserRequest,
     @Query() searchQuery?: PaymentsFilterDTO,
@@ -47,6 +70,11 @@ export class PaymentsController {
   }
 
   @Patch(':id')
+  @ApiResponse({
+    description: 'The record has been successfully created.',
+    type: Payment,
+    status: 200,
+  })
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updatePaymentDto: UpdatePaymentDto,
@@ -56,6 +84,11 @@ export class PaymentsController {
   }
 
   @Delete(':id')
+  @ApiResponse({
+    description: 'The record has been successfully created.',
+    type: Payment,
+    status: 200,
+  })
   remove(@Param('id', ParseIntPipe) id: number, @Req() request: UserRequest) {
     return this.paymentsService.remove(id, request.user.id);
   }

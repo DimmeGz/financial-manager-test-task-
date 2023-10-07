@@ -9,4 +9,5 @@ export const VALIDATION_SCHEMA = Joi.object({
   DB_NAME: Joi.string().required(),
   JWT_SECRET: Joi.string().required(),
   JWT_TOKEN_EXPIRE: Joi.string().required(),
+  MONGO_URL: Joi.string().required(),
 });

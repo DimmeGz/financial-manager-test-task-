@@ -1,5 +1,10 @@
 import { Controller, Get, Req, UseGuards } from '@nestjs/common';
-import { ApiHeader, ApiResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import {
+  ApiHeader,
+  ApiResponse,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 
 import { UsersService } from './users.service';
 

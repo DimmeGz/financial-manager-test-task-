@@ -1,9 +1,11 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreatePaymentDto, PaymentsFilterDTO, UpdatePaymentDto } from '../dto';
-import { Payment, User } from 'src/entities';
+import { Payment, User } from '../entities';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { PaymentType } from 'src/enums';
+import { PaymentType } from '../enums';
+import { LoggerService } from '../logger/logger.service';
+import { Action } from '../interfaces';
 
 @Injectable()
 export class PaymentsService {
@@ -12,6 +14,7 @@ export class PaymentsService {
     private readonly paymentsRepository: Repository<Payment>,
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
+    private readonly loggerService: LoggerService,
   ) {}
 
   async create(createPaymentDto: CreatePaymentDto, userId: number) {
@@ -31,6 +34,15 @@ export class PaymentsService {
       const user = await this.usersRepository.findOneByOrFail({ id: userId });
       user.balance += changeBalance;
       await this.usersRepository.save(user);
+
+      this.loggerService.save({
+        action: Action.create,
+        amount: createPaymentDto.amount,
+        category: createPaymentDto.category,
+        paymentType: createPaymentDto.type,
+        paymentDate: createdPayment.created_at,
+        created_at: new Date(),
+      });
 
       return { createdPayment };
     } catch (e) {
@@ -99,6 +111,16 @@ export class PaymentsService {
       await this.usersRepository.save(user);
       const newPayment = Object.assign(payment, updatePaymentDto);
       const updatedPayment = await this.paymentsRepository.save(newPayment);
+
+      this.loggerService.save({
+        action: Action.update,
+        amount: updatedPayment.amount,
+        category: updatedPayment.category,
+        paymentType: updatedPayment.type,
+        paymentDate: updatedPayment.created_at,
+        created_at: new Date(),
+      });
+
       return { updatedPayment };
     } catch (e) {
       throw new BadRequestException(e.message);
@@ -121,6 +143,15 @@ export class PaymentsService {
 
       await this.usersRepository.save(user);
       await this.paymentsRepository.remove(payment);
+
+      this.loggerService.save({
+        action: Action.delete,
+        amount: payment.amount,
+        category: payment.category,
+        paymentType: payment.type,
+        paymentDate: payment.created_at,
+        created_at: new Date(),
+      });
 
       return { payment };
     } catch (e) {

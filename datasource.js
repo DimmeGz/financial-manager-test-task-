@@ -15,6 +15,6 @@ exports.connectionSource = new DataSource({
   synchronize: true,
   name: 'default',
   entities: ['./*/entities/*.ts'],
-  migrations: ['migrations/*.ts'],
+  migrations: ['src/migrations/*.ts'],
   subscribers: ['src/subscribers/*.ts'],
 });

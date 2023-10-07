@@ -44,19 +44,19 @@ export class PaymentsService {
         .createQueryBuilder('payment')
         .where('payment.user.id = :userId', { userId });
 
-      if (searchQuery.start_date) {
+      if (searchQuery && searchQuery.start_date) {
         qb.andWhere('payment.created_at >= :startDate', {
           startDate: searchQuery.start_date,
         });
       }
 
-      if (searchQuery.end_date) {
+      if (searchQuery && searchQuery.end_date) {
         qb.andWhere('payment.created_at <= :endDate', {
           endDate: searchQuery.end_date,
         });
       }
 
-      if (searchQuery.description) {
+      if (searchQuery && searchQuery.description) {
         qb.andWhere('payment.description LIKE :description', {
           description: `%${searchQuery.description}%`,
         });

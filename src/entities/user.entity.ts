@@ -2,9 +2,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Payment } from './payment.entity';
 
 @Entity({ name: 'users' })
 export class User {
@@ -22,6 +24,12 @@ export class User {
 
   @Column({ nullable: true })
   lastName: string;
+
+  @OneToMany(() => Payment, (payment) => payment.category)
+  payments: Payment[];
+
+  @Column({ default: 0 })
+  balance: number;
 
   @CreateDateColumn({
     precision: 0,

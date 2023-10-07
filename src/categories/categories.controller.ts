@@ -9,8 +9,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
-import { CreateCategoryDto } from '../dto/create-category.dto';
-import { JwtGuard } from 'src/guards';
+import { CreateCategoryDto } from '../dto';
+import { JwtGuard } from '../guards';
 
 @Controller('categories')
 @UseGuards(JwtGuard)

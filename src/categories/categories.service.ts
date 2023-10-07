@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 
 import { Category } from 'src/entities';
 
-import { CreateCategoryDto } from '../dto/create-category.dto';
+import { CreateCategoryDto } from '../dto';
 
 @Injectable()
 export class CategoriesService {

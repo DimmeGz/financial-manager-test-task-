@@ -4,6 +4,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Payment, User } from 'src/entities';
 import { CreatePaymentDto } from 'src/dto';
 import { PaymentType } from 'src/enums';
+import { LoggerService } from 'src/logger/logger.service';
 
 const paymentPayload: CreatePaymentDto = {
   type: PaymentType.income,
@@ -38,6 +39,12 @@ describe('PaymentsService', () => {
             create: jest.fn(),
             createQueryBuilder: jest.fn().mockReturnValue(queryBuilder),
             remove: jest.fn(),
+          },
+        },
+        {
+          provide: LoggerService,
+          useValue: {
+            save: jest.fn(),
           },
         },
       ],

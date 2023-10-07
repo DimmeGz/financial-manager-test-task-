@@ -27,3 +27,7 @@ $ npm run test
 # test coverage
 $ npm run test:cov
 ```
+
+## Swagger
+
+Swagger is available on http://localhost:3000/api

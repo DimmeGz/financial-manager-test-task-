@@ -1,15 +1,21 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 
-import { CreateUserDTO } from 'src/dto';
+import { CreateUserDTO, LoginDTO } from 'src/dto';
 import { User } from 'src/entities';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User) private readonly usersRepository: Repository<User>,
+    private readonly jwtService: JwtService,
   ) {}
 
   async create(createUserDTO: CreateUserDTO) {
@@ -23,9 +29,36 @@ export class AuthService {
         lastName: createUserDTO.lastName,
       });
 
-      return await this.usersRepository.save(user);
+      const createdUser = await this.usersRepository.save(user);
+      const payload = { id: createdUser.id };
+      const token = this.jwtService.sign(payload);
+
+      return { token };
     } catch (e) {
       throw new BadRequestException(e.message);
+    }
+  }
+
+  async login(loginDTO: LoginDTO) {
+    try {
+      const user = await this.usersRepository.findOneByOrFail({
+        mail: loginDTO.mail,
+      });
+
+      const isRightPassword = await bcrypt.compare(
+        loginDTO.password,
+        user.password,
+      );
+      if (!isRightPassword) {
+        throw new Error('Wrong password');
+      }
+
+      const payload = { id: user.id };
+      const token = this.jwtService.sign(payload);
+
+      return { token };
+    } catch (e) {
+      throw new UnauthorizedException(e.message);
     }
   }
 }
